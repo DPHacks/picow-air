@@ -1,0 +1,36 @@
+# Configure the WiFi SSD and Password
+WIFI_SSID = "<WIFI-SSID>"
+WIFI_PASSWORD = "<WIFI-PASSWD>"
+# 
+# MQTT Settings: Set the broker name or IP address and topic to broadcast
+MQTT_BROKER = "example.local"
+MQTT_TOPIC = "enviro/picoair"
+MQTT_PORT = 1883
+MQTT_ISTLS = False
+MQTT_USERNAME = None
+MQTT_PASSWORD = None
+#
+# Interval (in seconds) between sensor measurements/MQTT publish
+# Not recommended to this lower than 5 seconds
+INTERVAL = 5
+#
+# Set the behavior for the board LEDs. LEDs will turn on if the 'measure' value
+# is between the thresholds. You can set the same 'measure'to create a two-LED 
+# status indicator. eg.
+# Green if PM 2.5 is between 0 and 5. 
+# Green and red if PM 2.5 is between 5 and 10.
+# Red only if PM 2.5 is above 10 degrees.
+# More examples at dphacks.com/picowair
+#
+# Green LED
+LED_G_MEASURE = 'PM25'
+LED_G_LOW_THRESHOLD = 0
+LED_G_HIGH_THRESHOLD = 10
+#
+# Red LED
+LED_R_MEASURE = 'PM25'
+LED_R_LOW_THRESHOLD = 5
+LED_R_HIGH_THRESHOLD = 999
+#
+# 0 for Celsius, 1 for Fahrenheit
+C_TO_F = 1
