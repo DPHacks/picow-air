@@ -150,6 +150,17 @@ def blink(led, period, times):
         if(i != times):
             time.sleep(period)
 
+def led_status(values):
+    if(LED_R_LOW_THRESHOLD < values[LED_R_MEASURE] <= LED_R_HIGH_THRESHOLD):
+        board_led_r.value = True
+    else:
+        board_led_r.value = False
+
+    if(LED_G_LOW_THRESHOLD < values[LED_G_MEASURE] <= LED_G_HIGH_THRESHOLD):
+        board_led_g.value = True
+    else:
+        board_led_g.value = False
+
 ### HELPER METHODS ###
 def merge_dicts(values, dicts):
     """
@@ -160,12 +171,10 @@ def merge_dicts(values, dicts):
     return dicts
 
 def average_dict(dicts):
-    print(dicts)
     for d in dicts:
         if(d not in avgDict):
             avgDict[d]=[]
         avgDict[d].append(dicts[d])
-        print(avgDict[d])
         ln = len(avgDict[d])
         if(ln > SMOOTH):
             newList = avgDict[d]
@@ -176,7 +185,7 @@ def average_dict(dicts):
 def average_values(avgDict):
     values = {}
     for v in avgDict:
-        values[v] = sum(avgDict[v])/len(avgDict[v])
+        values[v] = round(sum(avgDict[v])/len(avgDict[v]))
 
     return values
 
@@ -381,9 +390,10 @@ while True:
         
         # averrage to smooth out values
         avgDict = average_dict(mqtt_msg)
-        print(avgDict)
 
         mqtt_msg = average_values(avgDict)
+
+        led_status(mqtt_msg)
 
         if mqtt_msg:
             mqtt_client.publish(MQTT_TOPIC, json.dumps(mqtt_msg))
