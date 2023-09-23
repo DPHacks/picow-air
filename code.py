@@ -12,7 +12,7 @@ import board
 import busio
 from digitalio import DigitalInOut, Direction, Pull
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
-from adafruit_pm25.uart import PM25_UART
+
 import adafruit_ahtx0
 from adafruit_httpserver import (
     Server,
@@ -63,16 +63,19 @@ board_led_g.direction = Direction.OUTPUT
 #import analogio
 #adc = analogio.AnalogIn(board.A1)
 
-
 ### SENSOR DEFINITIONS ###
 
 ## PMS 5003
-reset_pin = DigitalInOut(board.GP8)
-reset_pin.direction = Direction.OUTPUT
-reset_pin.value = False
+print('Setting up PM Sensor...')
+from pms5003 import PMS5003
 
-uart = busio.UART(board.GP16, board.GP17, baudrate=9600)
-pm25 = PM25_UART(uart, reset_pin)
+pm25 = PMS5003()
+
+time.sleep(0.1)
+
+pm25.cmd_mode_passive()
+
+print('Sensor Setup!')
 
 ## Add Qwiic/QT/I2C Sensors
 ## SCL on GP21; SDA on GP20
@@ -96,14 +99,31 @@ def read_pms25():
     """
     Read air quality information from PMS5003
     """
+    pmvalues = {}
     pmdata = {}
 
     try:
         pmdata = pm25.read()
     except RuntimeError:
         print("Unable to read PM2.5 Data")
+        # pm25.reset()
 
-    return pmdata
+    if(pmdata):
+        pmvalues['pm10 standard'] = pmdata.data[0]
+        pmvalues['pm25 standard'] = pmdata.data[1]
+        pmvalues['pm100 standard'] = pmdata.data[2]
+        pmvalues['pm10 env'] = pmdata.data[3]
+        pmvalues['pm25 env'] = pmdata.data[4]
+        pmvalues['pm100 env'] = pmdata.data[5]
+        pmvalues['particles 03um'] = pmdata.data[6]
+        pmvalues['particles 05um'] = pmdata.data[7]
+        pmvalues['particles 10um'] = pmdata.data[8]
+        pmvalues['particles 25um'] = pmdata.data[9]
+        pmvalues['particles 50um'] = pmdata.data[10]
+        pmvalues['particles 100um'] = pmdata.data[11]
+
+
+    return pmvalues
 
 def read_temp_hum():
     """
@@ -232,6 +252,10 @@ def get_sensor_data(request: Request):
     Read sendor data and return JSON
     """
     data = read_all()
+
+    # averrage to smooth out values
+    avgDict = average_dict(data)
+    data = average_values(avgDict)
 
     return JSONResponse(request, data)
 
