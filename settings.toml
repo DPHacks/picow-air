@@ -6,9 +6,9 @@ WIFI_PASSWORD = "<WIFI-PASSWD>"
 MQTT_BROKER = "example.local"
 MQTT_TOPIC = "enviro/picoair"
 MQTT_PORT = 1883
-MQTT_ISTLS = False
-MQTT_USERNAME = None
-MQTT_PASSWORD = None
+MQTT_ISTLS = 0
+MQTT_USERNAME = 0
+MQTT_PASSWORD = 0
 #
 # Interval (in seconds) between sensor measurements/MQTT publish
 # Not recommended to this lower than 5 seconds
@@ -23,14 +23,16 @@ INTERVAL = 5
 # More examples at dphacks.com/picowair
 #
 # Green LED
-LED_G_MEASURE = 'PM25'
+LED_G_MEASURE = "PM25"
 LED_G_LOW_THRESHOLD = 0
 LED_G_HIGH_THRESHOLD = 10
 #
 # Red LED
-LED_R_MEASURE = 'PM25'
+LED_R_MEASURE = "PM25"
 LED_R_LOW_THRESHOLD = 5
 LED_R_HIGH_THRESHOLD = 999
 #
 # 0 for Celsius, 1 for Fahrenheit
 C_TO_F = 1
+# Number of values to smooth average
+SMOOTH = 10

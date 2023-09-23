@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript">
+
+        </script>
+        <style>
+            .content {
+                max-width: 80%;
+                margin: auto;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+            tr {
+                display: table-row;
+                border-bottom: 1px solid #ddd;
+                text-align: center;
+                }
+            th{
+                text-align: left;
+            }
+            h1 {
+                text-align: center;
+            }
+        </style>
+        <title>Pico Air</title>
+    </head>
+    <body>
+        <div class="content">
+            <h1>Pico W Air Quality</h1>
+            <p>A tiny MQTT and HTML server to monitor air quality, temperature, and humidity.</p>
+            <!-- PM Air Quality Table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                        <td>PM 1.0</th>
+                        <td>PM 2.5</th>
+                        <td>PM 10</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th>Environment</th>
+                        <td id="PM10env">1</td>
+                        <td id="PM25env">2</td>
+                        <td id="PM100env">3</td>
+                    </tr>
+                    <tr>
+                        <th>Standard</th>
+                        <td id="PM10std">1</td>
+                        <td id="PM25std">2</td>
+                        <td id="PM100std">3</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br/>
+            <!-- PM Concentration Table -->
+            <table style="width: 40%;">
+                <tbody>
+                    <tr>
+                        <th>Particles > 0.3um / 0.1L air:</th>
+                        <td id="PM03um">100</td>
+                    </tr>
+                    <tr>
+                        <th>Particles > 0.5um / 0.1L air:</th>
+                        <td id="PM05um">100</td>
+                    </tr>
+                    <tr>
+                        <th>Particles > 1.0um / 0.1L air:</th>
+                        <td id="PM10um">100</td>
+                    </tr>
+                    <tr>
+                        <th>Particles > 2.5um / 0.1L air:</th>
+                        <td id="PM25um">100</td>
+                    </tr>
+                    <tr>
+                        <th>Particles > 5.0um / 0.1L air:</th>
+                        <td id="PM50um">100</td>
+                    </tr>
+                    <tr>
+                        <th>Particles > 10um / 0.1L air:</th>
+                        <td id="PM100um">100</td>
+                    </tr>
+                </tbody>
+            </table>
+            <br/>
+            <!-- Temp and Humidity Table -->
+            <table style="width: 40%;">
+                <tbody>
+                    <tr>
+                        <th>Temperature</th>
+                        <td id="temp"></td>
+                    </tr>
+                    <tr>
+                        <th>Humidity</th>
+                        <td id="hum"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>Control the onboard LEDs</p>
+            <a href="\ledon"><button>Pico LED ON</button></a>&nbsp;
+            <a href="\ledoff"><button>Pico LED OFF</button></a>&nbsp;
+            <a href="\boardledon"><button>Board LED ON</button></a>&nbsp;
+            <a href="\boardledoff"><button>Board LED OFF</button></a>
+        </div>
+        <script type="text/javascript">
+            async function getData(){
+                const response = await fetch("/getdata");
+                const jsonData = await response.json();
+                document.getElementById('temp').innerHTML = jsonData['temperature']
+                document.getElementById('hum').innerHTML = jsonData['humidity']
+                // Check if able to read PM data
+                if (typeof jsonData['pm10 env'] !== 'undefined'){
+                    document.getElementById('PM10env').innerHTML = jsonData['pm10 env']
+                    document.getElementById('PM25env').innerHTML = jsonData['pm25 env']
+                    document.getElementById('PM100env').innerHTML = jsonData['pm100 env']
+                    document.getElementById('PM10std').innerHTML = jsonData['pm10 standard']
+                    document.getElementById('PM25std').innerHTML = jsonData['pm25 standard']
+                    document.getElementById('PM100std').innerHTML = jsonData['pm100 standard']
+                    document.getElementById('PM03um').innerHTML = jsonData['particles 03um']
+                    document.getElementById('PM05um').innerHTML = jsonData['particles 05um']
+                    document.getElementById('PM10um').innerHTML = jsonData['particles 10um']
+                    document.getElementById('PM25um').innerHTML = jsonData['particles 25um']
+                    document.getElementById('PM50um').innerHTML = jsonData['particles 50um']
+                    document.getElementById('PM100um').innerHTML = jsonData['particles 100um']
+                }
+            }
+            getData()
+            setInterval(function(){ 
+                getData()   
+            }, 10000);
+        </script>
+    </body>
+</html>
