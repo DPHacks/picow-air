@@ -1,6 +1,8 @@
 # Pico W Air Quality Monitoring w/ PM 2.5 Sensor
 A simple board with connection for PMS5003 particulate matter sensor and Qwiic/QT connector for more sensors. Powered, of course, by a Pico W.
 
+![Pico W Air with PM Air Quality Sensor](img/Pico_air-8.jpg?raw=true "Pico W Air")
+
 ## About the Pico W Air
 The Pico W Air board is tiny little device that tracks PM air quality. The board has a modular design and you can add additional sensors.
 
