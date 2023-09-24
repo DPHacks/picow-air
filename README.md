@@ -13,6 +13,7 @@ No Soldering required!
 <a href="https://www.tindie.com/stores/dphacks/?ref=offsite_badges&utm_source=sellers_DPHACKS&utm_medium=badges&utm_campaign=badge_large"><img src="https://d2ss6ovg47m0r5.cloudfront.net/badges/tindie-larges.png" alt="I sell on Tindie" width="200" height="104"></a>
 
 ## Features
+- Raspberry Pi Pico W Onboard
 - Connector for PMS5003 Particulate Matter sensor. (Molex PicoBlade 0532610871)
 - Qwiic/QT Connector for I2C sensors/peripherals. (JST SM04B-SRSS-TB(LF)(SN))
 - 1 Red and 1 Green LED for status or any other blinking business

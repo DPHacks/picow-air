@@ -26,6 +26,7 @@ from adafruit_httpserver import (
 
 # getenv variables are setup in the ***setting.toml*** file
 # These variables are replicated here for code readability only.
+MQTT_ENABLED = os.getenv('MQTT_ENABLED')
 MQTT_BROKER = os.getenv('MQTT_BROKER')
 MQTT_TOPIC = os.getenv('MQTT_TOPIC')
 MQTT_PORT = os.getenv('MQTT_PORT')
