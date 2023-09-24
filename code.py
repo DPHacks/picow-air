@@ -1,3 +1,27 @@
+# MIT License
+
+# Copyright (c) 2023 dphacks.com
+# Copyright (c) 2023 André Costa
+
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
 ## Created by André Costa for dphacks.com
 ## Documentation is available at https://github.com/DPHacks/picow-air
 ## Make sure to edit the settings.toml file with WiFi credentials
@@ -42,6 +66,7 @@ LED_R_HIGH_THRESHOLD = os.getenv('LED_R_HIGH_THRESHOLD')
 LED_G_MEASURE = os.getenv('LED_G_MEASURE')
 LED_G_LOW_THRESHOLD = os.getenv('LED_G_LOW_THRESHOLD')
 LED_G_HIGH_THRESHOLD = os.getenv('LED_G_HIGH_THRESHOLD')
+
 C_TO_F = os.getenv('C_TO_F')
 SMOOTH = os.getenv('SMOOTH')
 
@@ -71,9 +96,7 @@ print('Setting up PM Sensor...')
 from pms5003 import PMS5003
 
 pm25 = PMS5003()
-
 time.sleep(0.1)
-
 pm25.cmd_mode_passive()
 
 print('Sensor Setup!')
@@ -172,6 +195,10 @@ def blink(led, period, times):
             time.sleep(period)
 
 def led_status(values):
+    """
+    Turn onboard LEDs on/off based on sensor data. This can be used to create a status
+    indicator based on sensor reading values.
+    """
     if(LED_R_LOW_THRESHOLD < values[LED_R_MEASURE] <= LED_R_HIGH_THRESHOLD):
         board_led_r.value = True
     else:
@@ -192,18 +219,28 @@ def merge_dicts(values, dicts):
     return dicts
 
 def average_dict(dicts):
+    """
+    Record sensor measurements in a dictionary of lists. Used to smooth sensor readings
+    so they don't jump around too much
+    """
     for d in dicts:
+        # Add sensor measurement to avgDict if it doesn't already exists
+        # Helpful for not having to declare every possible sensor measure
         if(d not in avgDict):
             avgDict[d]=[]
         avgDict[d].append(dicts[d])
         ln = len(avgDict[d])
         if(ln > SMOOTH):
             newList = avgDict[d]
+            # Only keep SMOOTH number of items in the list
             avgDict[d] = newList[ln-SMOOTH:]
 
     return avgDict
     
 def average_values(avgDict):
+    """
+    Calculates the average measurement based on values stored in the average dict
+    """
     values = {}
     for v in avgDict:
         values[v] = round(sum(avgDict[v])/len(avgDict[v]))

@@ -108,11 +108,11 @@ This is configurable in the ```settings.toml``` file. The example above is pre-c
 
 ```python
 # Green LED
-LED_G_MEASURE = 'PM25'
+LED_G_MEASURE = "PM25"
 LED_G_LOW_THRESHOLD = 0
 LED_G_HIGH_THRESHOLD = 10
 # Red LED
-LED_R_MEASURE = 'PM25'
+LED_R_MEASURE = "PM25"
 LED_R_LOW_THRESHOLD = 5
 LED_R_HIGH_THRESHOLD = 999
 ```
