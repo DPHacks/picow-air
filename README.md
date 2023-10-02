@@ -44,6 +44,11 @@ You can pick an HT20 sensor for around $5 from one of the sellers below (not aff
 
 [Adafruit AHT20](https://www.adafruit.com/product/4566), [Sparkfun AHT20](https://www.sparkfun.com/products/16618)
 
+## Power Source
+Power is supplied directly through the micro USB connector on the Pico W. Power draw is only 70mA to 90mA with a Plantower PMS5003 PM sensor and AHT20 temp/hum sensor connected. This means a 10000mAh power bank should keep the Pico W Air running for a little longer than 5 days.
+
+The Pico's VSYS pin is exposed to a pad on the board, allowing for alternate power sources. VSYS should be supplied 5V.
+
 ## Firmware
 The Pico W Air board ships with Firmware installed. All you have to do edit the settings is to connect it to a computer using the onboard USB port and a text editor. The firmware is based on CircuitPython, which creates a drive on your computer and lets you edit the code files directly from the microcontroller. There is no need to compile the firmware, just save the file and restart the board for changes to take effect.
 
