@@ -70,6 +70,8 @@ LED_G_HIGH_THRESHOLD = os.getenv('LED_G_HIGH_THRESHOLD')
 C_TO_F = os.getenv('C_TO_F')
 SMOOTH = os.getenv('SMOOTH')
 
+VERSION = 0.9
+
 ### PIN DEFINITIONS ###
 ## PICO LED
 led = DigitalInOut(board.LED)
@@ -103,6 +105,9 @@ print('Sensor Setup!')
 
 ## Add Qwiic/QT/I2C Sensors
 ## SCL on GP21; SDA on GP20
+
+# Comment out the lines below if you don't have any I2C
+# sensors plugged into the Qwiic connector
 i2c = busio.I2C(board.GP21, board.GP20)
 th = adafruit_ahtx0.AHTx0(i2c)
 
@@ -457,10 +462,10 @@ while True:
 
         led_status(mqtt_msg)
 
-        if mqtt_msg:
+        if (mqtt_msg and MQTT_ENABLED and wifi.radio.connected):
             mqtt_client.publish(MQTT_TOPIC, json.dumps(mqtt_msg))
         else:
-            print("No successful readings")
+            print("No successful readings or wifi is disconnected")
 
         clock = time.monotonic()
     
