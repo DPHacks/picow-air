@@ -70,7 +70,7 @@ LED_G_HIGH_THRESHOLD = os.getenv('LED_G_HIGH_THRESHOLD')
 C_TO_F = os.getenv('C_TO_F')
 SMOOTH = os.getenv('SMOOTH')
 
-VERSION = 0.9
+VERSION = 1.0
 
 ### PIN DEFINITIONS ###
 ## PICO LED
@@ -103,13 +103,17 @@ pm25.cmd_mode_passive()
 
 print('Sensor Setup!')
 
-## Add Qwiic/QT/I2C Sensors
+## Setup i2c bus for Qwiic/QT sensors
 ## SCL on GP21; SDA on GP20
+try:
+    i2c = busio.I2C(board.GP21, board.GP20)
+except RuntimeError:
+    print("I2C/Qwiic sensor not found")
+    i2c = 0
 
-# Comment out the lines below if you don't have any I2C
-# sensors plugged into the Qwiic connector
-i2c = busio.I2C(board.GP21, board.GP20)
-th = adafruit_ahtx0.AHTx0(i2c)
+## Add Qwiic/QT/I2C Sensors below
+if i2c:
+    th = adafruit_ahtx0.AHTx0(i2c) # Comment this line if not using AHT20
 
 avgDict = {}
 
@@ -120,7 +124,7 @@ def read_all():
     """
     data = {}
     data = merge_dicts(read_pms25(), data)
-    data = merge_dicts(read_temp_hum(), data)
+    data = merge_dicts(read_temp_hum(), data) # Comment this line if not using AHT20
 
     return data
 
@@ -159,13 +163,15 @@ def read_temp_hum():
     Read temp and humidity from environment sensor
     """
     values = {}
-
-    if(C_TO_F):
-        values['temperature'] = round(c_to_f(th.temperature), 2)
-    else:
-        values['temperature'] = round(th.temperature, 2)
-    
-    values['humidity'] = round(th.relative_humidity, 2)
+    try:
+        if(C_TO_F):
+            values['temperature'] = round(c_to_f(th.temperature), 2)
+        else:
+            values['temperature'] = round(th.temperature, 2)
+        
+        values['humidity'] = round(th.relative_humidity, 2)
+    except Exception:
+        print("No temp or humidity sensor")
 
     return values
 

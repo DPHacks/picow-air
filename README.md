@@ -25,7 +25,7 @@ No Soldering required!
 ## Getting started
 1. Before plugging any sensor, plug in the board to your computer using the micro USB port
 2. Edit the file ```settings.toml``` to include your WiFi SSID and Password.
-3. Unplug/power off the board and connect the PMS5003 sensor and any other sensors. It's best practive to only connect/disconnect sensors while the board is powered off to avoid shorts.
+3. Unplug/power off the board and connect the PMS5003 sensor and any other sensors. It's best practice to only connect/disconnect sensors while the board is powered off to avoid shorts.
 
 ## Recommended Sensors
 To take full advantage of the Pico W Air board, you should plug in a PMS5003 PM Sensor. The whole point of the Pico W Air board is to monitor ar quality in your home or outside.
@@ -81,11 +81,14 @@ pm25 = PM25_UART(uart, reset_pin)
 ### Temperature and Humidity
 The board is preconfigured to use the AHT20 Temperature and Humidity sensor through I2C. This is an accurate and cost effective sensor. You can pick one up from Adafruit [AHT20 Temp and Humidity](https://www.adafruit.com/product/4566).
 
-If you don't have a I2C sensor plugged into the Qwiic connector, make sure to comment out the lines below. 
+The code checks if there is an I2C device connected to the board through the Qwiic/QT connector. If you are not using the AHT20 sensor, feel free to comment out the lines of code listed below.
 
 ```python
-i2c = busio.I2C(board.GP21, board.GP20)
-th = adafruit_ahtx0.AHTx0(i2c)
+if i2c:
+    th = adafruit_ahtx0.AHTx0(i2c) # Comment this line if not using AHT20
+```
+```python
+data = merge_dicts(read_temp_hum(), data) # Comment this line if not using AHT20
 ```
 
 ## Settings
