@@ -443,7 +443,8 @@ mqtt_client.on_message = message
 if MQTT_USERNAME and MQTT_PASSWORD:
     mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
 
-mqtt_client.connect()
+if MQTT_ENABLED:
+    mqtt_client.connect()
 
 # Start the html server.
 server.start(str(wifi.radio.ipv4_address))
