@@ -70,7 +70,7 @@ LED_G_HIGH_THRESHOLD = os.getenv('LED_G_HIGH_THRESHOLD')
 C_TO_F = os.getenv('C_TO_F')
 SMOOTH = os.getenv('SMOOTH')
 
-VERSION = 1.0
+VERSION = 1.1
 
 ### PIN DEFINITIONS ###
 ## PICO LED
@@ -287,6 +287,15 @@ print("My MAC addr:", [hex(i) for i in wifi.radio.mac_address])
 #  prints IP address to REPL
 print("My IP address is", wifi.radio.ipv4_address)
 
+# Setup MQTT Client
+mqtt_client = MQTT.MQTT(
+    broker=MQTT_BROKER,
+    port=MQTT_PORT,
+    socket_pool=pool,
+    is_ssl=MQTT_ISTLS,
+    connect_retries = 2
+)
+
 ### HTML SERVER ROUTES ###
 @server.route("/")
 def base(request: Request):
@@ -422,15 +431,12 @@ def message(client, topic, message):
     This method is called when a client's subscribed feed has a new value.
     """
     print("New message on topic {0}: {1}".format(topic, message))
-    
 
-# Setup MQTT Client
-mqtt_client = MQTT.MQTT(
-    broker=MQTT_BROKER,
-    port=MQTT_PORT,
-    socket_pool=pool,
-    is_ssl=MQTT_ISTLS
-)
+def mqtt_try_reconnect():
+    try:
+        mqtt_client.reconnect()
+    except MQTT.MMQTTException as e:
+        print(e)
 
 # Connect callback handlers for mqtt_client
 mqtt_client.on_connect = connect
@@ -469,10 +475,22 @@ while True:
 
         led_status(mqtt_msg)
 
-        if (mqtt_msg and MQTT_ENABLED and wifi.radio.connected):
-            mqtt_client.publish(MQTT_TOPIC, json.dumps(mqtt_msg))
-        else:
-            print("No successful readings or wifi is disconnected")
+        if not mqtt_client.is_connected():
+            mqtt_try_reconnect()
+            continue
+
+        else:     
+            if (mqtt_msg and MQTT_ENABLED and wifi.radio.connected):
+                try:
+                    mqtt_client.publish(MQTT_TOPIC, json.dumps(mqtt_msg))
+                except MQTT.MMQTTException as e:
+                    print(e)
+                except:
+                    print("WiFi disconnected and MQTT socket is broken...")
+                    print("Trying to reconnect")
+                    mqtt_try_reconnect()
+            else:
+                print("No successful readings or wifi is disconnected")
 
         clock = time.monotonic()
     
