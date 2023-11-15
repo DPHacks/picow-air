@@ -24,6 +24,12 @@
             h1 {
                 text-align: center;
             }
+            .aqi_box {
+                width: 20%;
+                border-radius: 20px;
+                text-align: center;
+                background-color: rgb(255, 255, 255);
+            }
         </style>
         <title>Pico Air</title>
     </head>
@@ -31,6 +37,9 @@
         <div class="content">
             <h1>Pico W Air Quality</h1>
             <p>A tiny MQTT and HTML server to monitor air quality, temperature, and humidity.</p>
+            <div class="aqi_box" id="AQI">
+                -
+            </div>
             <!-- PM Air Quality Table -->
             <table>
                 <thead>
@@ -43,16 +52,16 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <th>Environment</th>
-                        <td id="PM10env">1</td>
-                        <td id="PM25env">2</td>
-                        <td id="PM100env">3</td>
+                        <th>Environment (&micro;g/m<sup>3</sup>)</th>
+                        <td id="PM10env">-</td>
+                        <td id="PM25env">-</td>
+                        <td id="PM100env">-</td>
                     </tr>
                     <tr>
-                        <th>Standard</th>
-                        <td id="PM10std">1</td>
-                        <td id="PM25std">2</td>
-                        <td id="PM100std">3</td>
+                        <th>Standard (&micro;g/m<sup>3</sup>)</th>
+                        <td id="PM10std">-</td>
+                        <td id="PM25std">-</td>
+                        <td id="PM100std">-</td>
                     </tr>
                 </tbody>
             </table>
@@ -62,27 +71,27 @@
                 <tbody>
                     <tr>
                         <th>Particles > 0.3um / 0.1L air:</th>
-                        <td id="PM03um">100</td>
+                        <td id="PM03um">-</td>
                     </tr>
                     <tr>
                         <th>Particles > 0.5um / 0.1L air:</th>
-                        <td id="PM05um">100</td>
+                        <td id="PM05um">-</td>
                     </tr>
                     <tr>
                         <th>Particles > 1.0um / 0.1L air:</th>
-                        <td id="PM10um">100</td>
+                        <td id="PM10um">-</td>
                     </tr>
                     <tr>
                         <th>Particles > 2.5um / 0.1L air:</th>
-                        <td id="PM25um">100</td>
+                        <td id="PM25um">-</td>
                     </tr>
                     <tr>
                         <th>Particles > 5.0um / 0.1L air:</th>
-                        <td id="PM50um">100</td>
+                        <td id="PM50um">-</td>
                     </tr>
                     <tr>
                         <th>Particles > 10um / 0.1L air:</th>
-                        <td id="PM100um">100</td>
+                        <td id="PM100um">-</td>
                     </tr>
                 </tbody>
             </table>
@@ -92,11 +101,11 @@
                 <tbody>
                     <tr>
                         <th>Temperature</th>
-                        <td id="temp"></td>
+                        <td id="temp">-</td>
                     </tr>
                     <tr>
                         <th>Humidity</th>
-                        <td id="hum"></td>
+                        <td id="hum">-</td>
                     </tr>
                 </tbody>
             </table>
@@ -128,9 +137,17 @@
                     document.getElementById('PM100um').innerHTML = jsonData['particles 100um']
                 }
             }
+            async function getAQI(){
+                const response = await fetch("/aqi");
+                const jsonData = await response.json();
+                document.getElementById('AQI').innerHTML = jsonData['aqi']+' '+jsonData['category']
+                document.getElementById('AQI').style.backgroundColor = 'rgb(' + [jsonData['rgb'][0],jsonData['rgb'][1],jsonData['rgb'][2]].join(',') + ')';
+            }
             getData()
+            getAQI()
             setInterval(function(){ 
-                getData()   
+                getData()
+                getAQI()   
             }, 10000);
         </script>
     </body>

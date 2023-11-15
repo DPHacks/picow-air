@@ -36,6 +36,7 @@ import board
 import busio
 from digitalio import DigitalInOut, Direction, Pull
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
+import dphacks_usaqi as USAQI
 
 import adafruit_ahtx0
 from adafruit_httpserver import (
@@ -323,6 +324,15 @@ def pmdata_client(request: Request):
     Serve PMS 5003 data as JSON
     """
     data = read_pms25()
+    return JSONResponse(request, data)
+
+@server.route("/aqi")
+def pmdata_client(request: Request):
+    """
+    Serve US AQI info as JSON
+    """
+    data = USAQI.pm25_aqi(average_values(avgDict)['pm25 env'])
+    data = USAQI.aqi_info(data)
     return JSONResponse(request, data)
 
 @server.route("/th")

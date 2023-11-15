@@ -110,4 +110,7 @@ def aqi_info(aqi):
         if values[0] <= aqi <= values[1]:
             break
 
-    return AQI_INFO[i]
+    data = {'aqi': aqi}
+    data.update(AQI_INFO[i]) 
+
+    return data
