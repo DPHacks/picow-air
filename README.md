@@ -127,6 +127,13 @@ LED_R_LOW_THRESHOLD = 5
 LED_R_HIGH_THRESHOLD = 999
 ```
 
+## Built in JSON web API
+You can access the built in JSON API through a standard http call to http://boardIP/endpoint. Replace ```boardIP``` with the IP address assigned by your router. Here's a list of endpoints available.
+
+```/getdata``` returns readings from all connected sensors</br>
+```/pmdata``` returns PM sensor information</br>
+```/aqi``` returns the PM 2.5 AIR quality index (US EPA)</br>
+
 ## Pin Reference
 |**Board Feature**|**Pico w**
 ---|---
