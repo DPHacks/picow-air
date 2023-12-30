@@ -485,22 +485,23 @@ while True:
 
         led_status(mqtt_msg)
 
-        if not mqtt_client.is_connected():
-            mqtt_try_reconnect()
-            continue
+        if MQTT_ENABLED:
+            if not mqtt_client.is_connected():
+                mqtt_try_reconnect()
+                continue
 
-        else:     
-            if (mqtt_msg and MQTT_ENABLED and wifi.radio.connected):
-                try:
-                    mqtt_client.publish(MQTT_TOPIC, json.dumps(mqtt_msg))
-                except MQTT.MMQTTException as e:
-                    print(e)
-                except:
-                    print("WiFi disconnected and MQTT socket is broken...")
-                    print("Trying to reconnect")
-                    mqtt_try_reconnect()
-            else:
-                print("No successful readings or wifi is disconnected")
+            else:     
+                if (mqtt_msg and wifi.radio.connected):
+                    try:
+                        mqtt_client.publish(MQTT_TOPIC, json.dumps(mqtt_msg))
+                    except MQTT.MMQTTException as e:
+                        print(e)
+                    except:
+                        print("WiFi disconnected and MQTT socket is broken...")
+                        print("Trying to reconnect")
+                        mqtt_try_reconnect()
+                else:
+                    print("No successful readings or wifi is disconnected")
 
         clock = time.monotonic()
     
