@@ -28,6 +28,7 @@
 
 import os
 import time
+import sys
 #import ipaddress
 import wifi
 import socketpool
@@ -71,7 +72,7 @@ LED_G_HIGH_THRESHOLD = os.getenv('LED_G_HIGH_THRESHOLD')
 C_TO_F = os.getenv('C_TO_F')
 SMOOTH = os.getenv('SMOOTH')
 
-VERSION = 1.1
+VERSION = 1.2
 
 ### PIN DEFINITIONS ###
 ## PICO LED
@@ -267,8 +268,11 @@ def c_to_f(temp):
 
 
 print("Connecting to WiFi")
-
-wifi.radio.connect(os.getenv('WIFI_SSID'), os.getenv('WIFI_PASSWORD'))
+try:
+    wifi.radio.connect(os.getenv('WIFI_SSID'), os.getenv('WIFI_PASSWORD'))
+except ConnectionError as e:
+    print(e)
+    sys.exit()
 
 # Blink the green LED if Wifi is connected
 if(wifi.radio.connected):
@@ -506,4 +510,4 @@ while True:
         clock = time.monotonic()
     
     # Process html requests between reading sensor data
-    pool_result = server.poll()
+    pool_result = server.poll() # type: ignore
