@@ -464,7 +464,14 @@ if MQTT_USERNAME and MQTT_PASSWORD:
     mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
 
 if MQTT_ENABLED:
-    mqtt_client.connect()
+    try:
+        mqtt_client.connect()
+    except MQTT.MMQTTException as e:
+        print(e)
+        print("MQTT is enabled in settings.toml but it was not possible to connect")
+        print("to a MQTT broker. Check the MQTT parameters in settings.toml to make")
+        print("sure they are correct")
+        sys.exit()
 
 # Start the html server.
 server.start(str(wifi.radio.ipv4_address))
