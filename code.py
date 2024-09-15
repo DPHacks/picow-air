@@ -72,7 +72,7 @@ LED_G_HIGH_THRESHOLD = os.getenv('LED_G_HIGH_THRESHOLD')
 C_TO_F = os.getenv('C_TO_F')
 SMOOTH = os.getenv('SMOOTH')
 
-VERSION = 1.2
+VERSION = 1.3
 
 ### PIN DEFINITIONS ###
 ## PICO LED
@@ -157,8 +157,15 @@ def read_pms25():
         pmvalues['particles 50um'] = pmdata.data[10]
         pmvalues['particles 100um'] = pmdata.data[11]
 
-
     return pmvalues
+
+def pmdata_aqi():
+    """
+    Get AQI information based on average values
+    """
+    aqi = USAQI.pm25_aqi(average_values(avgDict)['pm25 env'])
+    aqi = USAQI.aqi_info(aqi)
+    return aqi
 
 def read_temp_hum():
     """
@@ -266,13 +273,18 @@ def c_to_f(temp):
     """
     return (temp * 9 / 5) + 32
 
+def error_message(message1, message2):
+    print(message1)
+    print(message2)
+    blink(board_led_r, 0.2, 3)
+    sys.exit()
+
 
 print("Connecting to WiFi")
 try:
     wifi.radio.connect(os.getenv('WIFI_SSID'), os.getenv('WIFI_PASSWORD'))
 except ConnectionError as e:
-    print(e)
-    sys.exit()
+    error_message("Connection to WiFi was not possible", e)
 
 # Blink the green LED if Wifi is connected
 if(wifi.radio.connected):
@@ -283,7 +295,7 @@ if(wifi.radio.connected):
 # Create socket pool
 pool = socketpool.SocketPool(wifi.radio)
 
-# Create html server
+# Create HTML server
 server = Server(pool, '/html', debug=True)
 
 #  prints MAC address to REPL
@@ -447,10 +459,13 @@ def message(client, topic, message):
     print("New message on topic {0}: {1}".format(topic, message))
 
 def mqtt_try_reconnect():
+    """
+    Try to reconnect to MQTT broker service
+    """
     try:
         mqtt_client.reconnect()
     except MQTT.MMQTTException as e:
-        print(e)
+        error_message("Not able to reconnect to MQTT broker", e)
 
 # Connect callback handlers for mqtt_client
 mqtt_client.on_connect = connect
@@ -460,20 +475,20 @@ mqtt_client.on_unsubscribe = unsubscribe
 mqtt_client.on_publish = publish
 mqtt_client.on_message = message
 
+# Not all MQTT brokers require a username and password
 if MQTT_USERNAME and MQTT_PASSWORD:
     mqtt_client.username_pw_set(MQTT_USERNAME, MQTT_PASSWORD)
 
+# Only try to connect if the MQTT is enabled in settings.toml
 if MQTT_ENABLED:
     try:
         mqtt_client.connect()
     except MQTT.MMQTTException as e:
-        print(e)
-        print("MQTT is enabled in settings.toml but it was not possible to connect")
-        print("to a MQTT broker. Check the MQTT parameters in settings.toml to make")
-        print("sure they are correct")
-        sys.exit()
+        error_message(e, ("MQTT is enabled in settings.toml but it was not possible to connect \n"
+              "to a MQTT broker. Check the MQTT parameters in settings.toml to make \n"
+              "sure they are correct."))
 
-# Start the html server.
+# Start the HTML server.
 server.start(str(wifi.radio.ipv4_address))
 
 # Get clock reference
@@ -494,6 +509,10 @@ while True:
 
         mqtt_msg = average_values(avgDict)
 
+        aqi_data = {'aqi': pmdata_aqi()}
+
+        mqtt_msg = merge_dicts(aqi_data, mqtt_msg)
+
         led_status(mqtt_msg)
 
         if MQTT_ENABLED:
@@ -508,8 +527,8 @@ while True:
                     except MQTT.MMQTTException as e:
                         print(e)
                     except:
-                        print("WiFi disconnected and MQTT socket is broken...")
-                        print("Trying to reconnect")
+                        print(("WiFi disconnected and MQTT socket is broken... \n"
+                              "Trying to reconnect"))
                         mqtt_try_reconnect()
                 else:
                     print("No successful readings or wifi is disconnected")
