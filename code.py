@@ -163,9 +163,15 @@ def pmdata_aqi():
     """
     Get AQI information based on average values
     """
+<<<<<<< HEAD
     value = USAQI.pm25_aqi(average_values(avgDict)['pm25 env'])
     value = USAQI.aqi_info(value)
     return value
+=======
+    aqi = USAQI.pm25_aqi(average_values(avgDict)['pm25 env'])
+    aqi = USAQI.aqi_info(aqi)
+    return aqi
+>>>>>>> 9636e2a3af18ddd94d9607d47c4bb861f79a2eba
 
 def read_temp_hum():
     """
@@ -509,7 +515,11 @@ while True:
 
         mqtt_msg = average_values(avgDict)
 
+<<<<<<< HEAD
         aqi = pmdata_aqi()
+=======
+        aqi_data = {'aqi': pmdata_aqi()}
+>>>>>>> 9636e2a3af18ddd94d9607d47c4bb861f79a2eba
 
         mqtt_msg = merge_dicts(aqi_data, mqtt_msg)
 
