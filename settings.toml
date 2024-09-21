@@ -3,7 +3,7 @@ WIFI_SSID = "<WIFI-SSID>"
 WIFI_PASSWORD = "<WIFI-PASSWD>"
 # 
 # MQTT Settings: Set the broker name or IP address and topic to broadcast
-MQTT_ENABLED = 1
+MQTT_ENABLED = 0
 MQTT_BROKER = "example.local"
 MQTT_TOPIC = "enviro/picoair"
 MQTT_PORT = 1883
