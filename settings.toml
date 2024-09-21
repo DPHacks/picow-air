@@ -12,7 +12,7 @@ MQTT_USERNAME = 0
 MQTT_PASSWORD = 0
 #
 # Interval (in seconds) between sensor measurements/MQTT publish
-# Not recommended to this lower than 5 seconds
+# Not recommended to set this lower than 5 seconds
 INTERVAL = 5
 #
 # Set the behavior for the board LEDs. LEDs will turn on if the 'measure' value
@@ -36,4 +36,5 @@ LED_R_HIGH_THRESHOLD = 999
 # 0 for Celsius, 1 for Fahrenheit
 C_TO_F = 1
 # Number of values to smooth average
+# Depending on the sensor, measurements can jump around quite a bit
 SMOOTH = 10
