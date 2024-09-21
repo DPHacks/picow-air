@@ -273,11 +273,17 @@ def c_to_f(temp):
     """
     return (temp * 9 / 5) + 32
 
-def error_message(message1, message2):
+def error_message(message1, message2, terminate=1):
+    """
+    Write the error messages to terminal and quit the script.
+    Quitting the script is the default but not all errors should
+    terminate the script
+    """
     print(message1)
     print(message2)
     blink(board_led_r, 0.2, 3)
-    sys.exit()
+    if(terminate):
+        sys.exit()
 
 
 print("Connecting to WiFi")
@@ -314,6 +320,7 @@ mqtt_client = MQTT.MQTT(
 )
 
 ### HTML SERVER ROUTES ###
+# There are all the endpoints/URLs available
 @server.route("/")
 def base(request: Request):
     """
@@ -465,7 +472,8 @@ def mqtt_try_reconnect():
     try:
         mqtt_client.reconnect()
     except MQTT.MMQTTException as e:
-        error_message("Not able to reconnect to MQTT broker", e)
+        # Don't quit if can't reconnect, let it try again.
+        error_message("Not able to reconnect to MQTT broker", e, 0)
 
 # Connect callback handlers for mqtt_client
 mqtt_client.on_connect = connect
