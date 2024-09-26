@@ -205,7 +205,8 @@ def led_off(led):
 
 def blink(led, period, times):
     """
-    Blink the LED passed to the function
+    Blink the LED passed to the function. Period is how long the led
+    will be on and Times is how many times it will blink.
     """
     for i in range(times):
         led_on(led)
@@ -241,7 +242,7 @@ def merge_dicts(values, dicts):
 def average_dict(dicts):
     """
     Record sensor measurements in a dictionary of lists. Used to smooth sensor readings
-    so they don't jump around too much
+    so they don't jump around too much.
     """
     for d in dicts:
         # Add sensor measurement to avgDict if it doesn't already exists
@@ -259,7 +260,8 @@ def average_dict(dicts):
     
 def average_values(avgDict):
     """
-    Calculates the average measurement based on values stored in the average dict
+    Calculates the average measurement based on values stored in the average dict.
+    Returns the averaged measurements
     """
     values = {}
     for v in avgDict:
@@ -286,7 +288,7 @@ def error_message(message1, message2, terminate=1):
         sys.exit()
 
 
-print("Connecting to WiFi")
+print("Connecting to WiFi...")
 try:
     wifi.radio.connect(os.getenv('WIFI_SSID'), os.getenv('WIFI_PASSWORD'))
 except ConnectionError as e:
@@ -331,7 +333,7 @@ def base(request: Request):
 @server.route("/getdata")
 def get_sensor_data(request: Request):
     """
-    Read sendor data and return JSON
+    Read sendor data and return JSON.
     """
     data = read_all()
 
@@ -344,7 +346,7 @@ def get_sensor_data(request: Request):
 @server.route("/pmdata")
 def pmdata_client(request: Request):
     """
-    Serve PMS 5003 data as JSON
+    Serve PMS 5003 data as JSON.
     """
     data = read_pms25()
     return JSONResponse(request, data)
@@ -352,7 +354,7 @@ def pmdata_client(request: Request):
 @server.route("/aqi")
 def pmdata_client(request: Request):
     """
-    Serve US AQI info as JSON
+    Serve US AQI info as JSON.
     """
     data = USAQI.pm25_aqi(average_values(avgDict)['pm25 env'])
     data = USAQI.aqi_info(data)
@@ -361,7 +363,7 @@ def pmdata_client(request: Request):
 @server.route("/th")
 def pmdata_client(request: Request):
     """
-    Serve Temp and Humidity data as JSON
+    Serve Temp and Humidity data as JSON.
     """
     data = read_temp_hum()
     return JSONResponse(request, data)
@@ -369,7 +371,7 @@ def pmdata_client(request: Request):
 @server.route("/ledon")
 def pico_led_on(request: Request):
     """
-    Turn on the Pico W LED
+    Turn on the Pico W LED.
     """
     led.value = True
 
@@ -378,7 +380,7 @@ def pico_led_on(request: Request):
 @server.route("/ledoff")
 def pico_led_on(request: Request):
     """
-    Turn off the Pico W LED
+    Turn off the Pico W LED.
     """
     led.value = False
 
@@ -387,7 +389,7 @@ def pico_led_on(request: Request):
 @server.route("/redledon")
 def board_led_on(request: Request):
     """
-    Turn on the red LED
+    Turn on the red LED.
     """
     led_on(board_led_r)
 
@@ -396,7 +398,7 @@ def board_led_on(request: Request):
 @server.route("/redledoff")
 def board_led_on(request: Request):
     """
-    Turn off the red LED
+    Turn off the red LED.
     """
     led_off(board_led_r)
 
@@ -405,7 +407,7 @@ def board_led_on(request: Request):
 @server.route("/greenledon")
 def board_led_on(request: Request):
     """
-    Turn on the green LED
+    Turn on the green LED.
     """
     led_on(board_led_g)
 
@@ -414,7 +416,7 @@ def board_led_on(request: Request):
 @server.route("/greenledoff")
 def board_led_on(request: Request):
     """
-    Turn off the green LED
+    Turn off the green LED.
     """
     led_off(board_led_g)
 
@@ -467,7 +469,7 @@ def message(client, topic, message):
 
 def mqtt_try_reconnect():
     """
-    Try to reconnect to MQTT broker service
+    Try to reconnect to MQTT broker service.
     """
     try:
         mqtt_client.reconnect()
