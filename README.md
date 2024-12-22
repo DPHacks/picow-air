@@ -1,7 +1,7 @@
 # Pico W Air Quality Monitoring w/ PM 2.5 Sensor
 A simple board with connection for PMS5003 particulate matter sensor and Qwiic/QT connector for more sensors. Powered, of course, by a Pico W.
 
-![Pico W Air with PM Air Quality Sensor](img/Pico_air-8.jpg?raw=true "Pico W Air")
+![Pico W Air with PM Air Quality Sensor](/img/Pico_air-8.jpg?raw=true "Pico W Air")
 
 ## About the Pico W Air
 The Pico W Air board is tiny little device that tracks PM air quality. The board has a modular design and you can add additional sensors.
@@ -135,31 +135,31 @@ You can access the built in JSON API through a standard http call to http://boar
 ```/aqi``` returns the PM 2.5 AIR quality index (US EPA)</br>
 
 ## Pin Reference
-|**Board Feature**|**Pico w**
----|---
-PMS5003 Pin 1|NC
-PMS5003 Pin 2|NC
-PMS5003 Pin 3 (PMS_RESET)|GP08
-PMS5003 Pin 4 (PMS_RX)|GP17
-PMS5003 Pin 5 (PMS_TX)|GP16
-PMS5003 Pin 6 (PMS_SET)|GP09
-PMS5003 Pin 7 (GND)|GND
-PMS5003 Pin 8 (GND)|VBUS
-Qwiic Pin 1 (GND)|GND
-Qwiic Pin 2 (3.3v)|3V3 OUT
-Qwiic Pin 3 (SDA)|GP20
-Qwiic Pin 4 (SCL)|GP21
-Red LED|GP22
-Green LED|GP18
-Button (NP) Pin 1|RUN
-Button (NP) Pin 2|GND
-Header Pin 1|GP27 (aka A1)
-Header Pin 2|3V3 OUT
-Header Pin 3|GND
-Header Pin 4|GP10
-Header Pin 5|GP11
-Header Pin 6|GP12
-Header Pin 7|GP13
-Header Pin 8|GND
+| **Board Feature**         | **Pico w**    |
+|---------------------------|---------------|
+| PMS5003 Pin 1             | NC            |
+| PMS5003 Pin 2             | NC            |
+| PMS5003 Pin 3 (PMS_RESET) | GP08          |
+| PMS5003 Pin 4 (PMS_RX)    | GP17          |
+| PMS5003 Pin 5 (PMS_TX)    | GP16          |
+| PMS5003 Pin 6 (PMS_SET)   | GP09          |
+| PMS5003 Pin 7 (GND)       | GND           |
+| PMS5003 Pin 8 (GND)       | VBUS          |
+| Qwiic Pin 1 (GND)         | GND           |
+| Qwiic Pin 2 (3.3v)        | 3V3 OUT       |
+| Qwiic Pin 3 (SDA)         | GP20          |
+| Qwiic Pin 4 (SCL)         | GP21          |
+| Red LED                   | GP22          |
+| Green LED                 | GP18          |
+| Button (NP) Pin 1         | RUN           |
+| Button (NP) Pin 2         | GND           |
+| Header Pin 1              | GP27 (aka A1) |
+| Header Pin 2              | 3V3 OUT       |
+| Header Pin 3              | GND           |
+| Header Pin 4              | GP10          |
+| Header Pin 5              | GP11          |
+| Header Pin 6              | GP12          |
+| Header Pin 7              | GP13          |
+| Header Pin 8              | GND           |
 
 
